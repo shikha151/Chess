@@ -23,12 +23,14 @@ public class ChessClient {
 
             String pairOfMoves;
 
-            BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\test\\workspace\\Chess\\src\\Chess\\PGN.txt"));
+            BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\test\\Desktop\\Chess\\src\\Chess\\PGN.txt"));
 
 
 
             while ((pairOfMoves = br.readLine()) != null) {
                 gameChessBoard.playMoves(pairOfMoves);
+                gameChessBoard.display();
+                System.out.println("------------------------------------------------");
 
 
             }

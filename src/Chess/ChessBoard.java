@@ -66,9 +66,11 @@ public class ChessBoard {
     public void playMoves(String pairOfMoves) {
 
         String moves[] = pairOfMoves.split(" |\\.");
+
         String whiteMove = moves[1];
         String blackMove = moves[2];
-        executeOneMove(whiteMove,'W');
+
+        executeOneMove(whiteMove, 'W');
         executeOneMove(blackMove,'B');
     }
 
@@ -76,7 +78,8 @@ public class ChessBoard {
 private void executeOneMove(String move, char color){
 
     if(isPawnMove(move)){
-    	
+        finalPosition = move.substring(move.length() - 2);
+        pieceType = 'P';
         ArrayList<String> initialPositions;
 		if(isCapture(move)){
             Piece pawnCapture = new PawnCapture();
@@ -90,14 +93,15 @@ private void executeOneMove(String move, char color){
         for(String position: initialPositions){
             String mapValue = chessBoard.get(position);
             if(mapValue.charAt(0)==color && mapValue.charAt(1)==pieceType){
-                if(color=='W'&&(position.charAt(1)<finalPosition.charAt(1))){
+               // System.out.print(color + " " + pieceType + finalPosition + " " +position);
+               if(color=='W'&&(position.charAt(1)<finalPosition.charAt(1))){
                         chessBoard.put(position,"#");
-                        chessBoard.put(finalPosition,color+pieceType+"");
+                        chessBoard.put(finalPosition,String.valueOf(color)+String.valueOf(pieceType));
                         break;
                     }
                 else if(position.charAt(1)>finalPosition.charAt(1) && color =='B'){
                         chessBoard.put(position,"#");
-                        chessBoard.put(finalPosition,color+pieceType+"");
+                        chessBoard.put(finalPosition,String.valueOf(color)+String.valueOf(pieceType));
                         break;
                 }
 
@@ -112,7 +116,7 @@ private void executeOneMove(String move, char color){
                 String mapValue = chessBoard.get(position);
                 if(mapValue.charAt(0)==color && mapValue.charAt(1)==pieceType){
                     chessBoard.put(position,"#");
-                    chessBoard.put(finalPosition,color+pieceType+"");
+                    chessBoard.put(finalPosition,String.valueOf(color)+String.valueOf(pieceType));
                     break;
                 }
         }
@@ -148,13 +152,19 @@ private void executeOneMove(String move, char color){
 
 
      private boolean isPawnMove( String move){
-        if(move.length()==2)
+         if(isCapture(move)&& move.length()==3){
+             return true;
+         }
+        else if(!isCapture(move)&& move.length()==2)
             return true;
-        else
-            return false;
+
+       return false;
     }
 
     private boolean isCapture( String move){
+        if(move.contains("x")){
+            return true;
+        }
         return false;
     }
     public void display(){
