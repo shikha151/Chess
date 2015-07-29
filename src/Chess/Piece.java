@@ -4,5 +4,5 @@ import java.util.ArrayList;
 
 public interface Piece {
     
-    ArrayList<String> getPossibleInitialPositions(String Position);
+    ArrayList<String> getPossibleInitialPositions(String finalPosition);
 }
