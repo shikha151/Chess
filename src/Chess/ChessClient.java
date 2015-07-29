@@ -29,8 +29,8 @@ public class ChessClient {
 
             while ((pairOfMoves = br.readLine()) != null) {
                 gameChessBoard.playMoves(pairOfMoves);
-                gameChessBoard.display();
-                System.out.println("------------------------------------------------");
+                //gameChessBoard.display();
+
 
 
             }

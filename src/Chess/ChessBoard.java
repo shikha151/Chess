@@ -74,11 +74,33 @@ public class ChessBoard {
         String blackMove = moves[2];
 
         executeOneMove(whiteMove, 'W');
+        display();
+
         executeOneMove(blackMove, 'B');
+        display();
     }
 
+    private void doCastle(char color){
+
+            if(color=='B'){
+                chessBoard.put("g8","BK");
+                chessBoard.put("e8","#");
+                chessBoard.put("f8","BR");
+                chessBoard.put("h8","#");
+            }
+            else {
+                chessBoard.put("g1", "WK");
+                chessBoard.put("e1", "#");
+                chessBoard.put("f1", "WR");
+                chessBoard.put("h1", "#");
+
+            }
+    }
 
     private void executeOneMove(String move, char color) {
+        if(isCastleMove(move)){
+            doCastle(color);
+        }
 
         if (isPawnMove(move)) {
             finalPosition = move.substring(move.length() - 2);
@@ -100,22 +122,29 @@ public class ChessBoard {
                         if (isConflictingMove(move)) {
                             if (position.contains(String.valueOf(conflictingCharacter))) {
                                 modifyChessboard(position, color);
-
+                                break;
                             }
                         } else {
                             modifyChessboard(position, color);
+                            break;
                         }
-                        break;
+
                     } else if (position.charAt(1) > finalPosition.charAt(1) && color == 'B') {
                         if (isConflictingMove(move)) {
+                            //dummy
+                            //System.out.println(position);
+                           //System.out.println(position.contains(String.valueOf(conflictingCharacter)));
                             if (position.contains(String.valueOf(conflictingCharacter))) {
+                                System.out.println(conflictingCharacter);
                                 modifyChessboard(position, color);
+                                break;
 
                             }
                         } else {
                             modifyChessboard(position, color);
+                            break;
                         }
-                        break;
+
 
                     }
 
@@ -131,12 +160,13 @@ public class ChessBoard {
                     if (isConflictingMove(move)) {
                         if (position.contains(String.valueOf(conflictingCharacter))) {
                             modifyChessboard(position, color);
-
+                            break;
                         }
                     } else {
                         modifyChessboard(position, color);
+                        break;
                     }
-                    break;
+
                 }
             }
         }
@@ -185,10 +215,11 @@ public class ChessBoard {
     }
 
     private boolean isCapture(String move) {
-        if (move.contains("x")) {
-            return true;
-        }
-        return false;
+        return move.contains("x");
+    }
+
+    private Boolean isCastleMove(String move){
+        return move.equals("O_O");
     }
 
     private boolean isConflictingMove(String move) {
@@ -229,7 +260,9 @@ public class ChessBoard {
                 }
             }
             System.out.println(outputString);
+
         }
+        System.out.println("------------------------------------------------");
     }
 
 }
