@@ -154,7 +154,24 @@ private void executeOneMove(String move, char color){
         return false;
     }
     public void display(){
-
+         for(int i=8 ;i>0; i--)
+         {
+            String outputString = "";
+            for(int j=1;j<=8;j++)
+            {
+                
+                String key = Character.toString((char) (j+ 96)) +i ;
+                if(chessBoard.containsKey(key))
+                {
+                    outputString +=chessBoard.get(key)+"\t";
+                }
+                else
+                {
+                    outputString += "#\t";
+                }
+           }
+            System.out.println(outputString);
+        }
     }
 
 }
