@@ -73,26 +73,49 @@ public class ChessBoard {
     }
 
 
-void executeOneMove(String move, char color){
+private void executeOneMove(String move, char color){
     ArrayList<String> initialPositions = getInitialPositions(move);
     if(isPawnMove(move)){
+        if(isCapture(move)){
+            Piece pawnCapture = new PawnCapture();
+            initialPositions = pawnCapture.getPossibleInitialPositions(finalPosition);
+        }
+        else{
+            Piece pawn = new Pawn();
+            initialPositions = pawn.getPossibleInitialPositions(finalPosition);
+        }
+
+        for(String position: initialPositions){
+            String mapValue = chessBoard.get(position);
+            if(mapValue.charAt(0)==color && mapValue.charAt(1)==pieceType){
+                if(color=='W'&&(position.charAt(1)<finalPosition.charAt(1))){
+                        chessBoard.put(position,"#");
+                        chessBoard.put(finalPosition,color+pieceType+"");
+                        break;
+                    }
+                else if(position.charAt(1)>finalPosition.charAt(1) && color =='B'){
+                        chessBoard.put(position,"#");
+                        chessBoard.put(finalPosition,color+pieceType+"");
+                        break;
+                }
+
+            }
+        }
 
     }
     else{
         for(String position: initialPositions){
-            String mapValue = chessBoard.get(position);
-            if(mapValue.charAt(0)==color && mapValue.charAt(1)==pieceType){
-               chessBoard.put(position,"#");// might be error
-                chessBoard.put(finalPosition,color+pieceType+"");
-            }
+                String mapValue = chessBoard.get(position);
+                if(mapValue.charAt(0)==color && mapValue.charAt(1)==pieceType){
+                    chessBoard.put(position,"#");
+                    chessBoard.put(finalPosition,color+pieceType+"");
+                    break;
+                }
         }
-
-
     }
 }
 
-
-    public ArrayList<String> getInitialPositions(String move){
+    private ArrayList<String> getInitialPositions(String move){
          pieceType = move.charAt(0);
          finalPosition = move.substring(move.length() - 2);
         Piece piece=null;
@@ -120,15 +143,18 @@ void executeOneMove(String move, char color){
 
 
 
-    public boolean isPawnMove( String move){
+     private boolean isPawnMove( String move){
         if(move.length()==2)
             return true;
         else
             return false;
     }
 
-    public boolean isCapture( String move){
+    private boolean isCapture( String move){
         return false;
+    }
+    public void display(){
+
     }
 
 }
