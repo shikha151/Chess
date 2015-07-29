@@ -4,10 +4,7 @@ import java.util.ArrayList;
 
 public class PawnCapture implements Piece{
 
-	public static void main(String[] args) {
-
-		System.out.println(new PawnCapture().getPossibleInitialPositions("d3"));
-	}
+	
 
 	@Override
 	public ArrayList<String> getPossibleInitialPositions(String finalPosition) {

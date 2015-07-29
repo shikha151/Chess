@@ -74,9 +74,11 @@ public class ChessBoard {
 
 
 private void executeOneMove(String move, char color){
-    ArrayList<String> initialPositions = getInitialPositions(move);
+
     if(isPawnMove(move)){
-        if(isCapture(move)){
+    	
+        ArrayList<String> initialPositions;
+		if(isCapture(move)){
             Piece pawnCapture = new PawnCapture();
             initialPositions = pawnCapture.getPossibleInitialPositions(finalPosition);
         }
@@ -101,9 +103,11 @@ private void executeOneMove(String move, char color){
 
             }
         }
+  
 
     }
     else{
+        ArrayList<String> initialPositions = getInitialPositions(move);
         for(String position: initialPositions){
                 String mapValue = chessBoard.get(position);
                 if(mapValue.charAt(0)==color && mapValue.charAt(1)==pieceType){

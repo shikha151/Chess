@@ -23,7 +23,5 @@ public class King implements Piece {
 		return possibleInitialMoves;
 	}
 
-	public static void main(String args[]) {
-		System.out.println(new King().getPossibleInitialPositions("d3"));
-	}
+	
 }

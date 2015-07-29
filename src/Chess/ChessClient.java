@@ -23,7 +23,7 @@ public class ChessClient {
 
             String pairOfMoves;
 
-            BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\test\\Desktop\\Chess\\src\\PGN.txt"));
+            BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\test\\workspace\\Chess\\src\\Chess\\PGN.txt"));
 
 
 

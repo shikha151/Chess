@@ -62,7 +62,5 @@ public class Bishop implements Piece {
 		return possibleInitialPositions;
 	}
 
-	public static void main(String Args[]) {
-		System.out.println(new Bishop().getPossibleInitialPositions("b3"));
-	}
+	
 }
