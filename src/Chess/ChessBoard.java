@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * Created by test on 7/29/2015.
  */
 public class ChessBoard {
-    //System.out.println();
+
     Map<String, String> chessBoard = new HashMap<String, String>();
     private char pieceType;
     private String finalPosition;
@@ -68,7 +68,7 @@ public class ChessBoard {
 
     public void playMoves(String pairOfMoves) {
 
-        String moves[] = pairOfMoves.split(" |\\.");
+        String moves[] = pairOfMoves.split(" ");
 
         String whiteMove = moves[1];
         String blackMove = moves[2];
@@ -80,78 +80,106 @@ public class ChessBoard {
         display();
     }
 
-    private void doCastle(char color){
+    private void doCastle(char color) {
 
-            if(color=='B'){
-                chessBoard.put("g8","BK");
-                chessBoard.put("e8","#");
-                chessBoard.put("f8","BR");
-                chessBoard.put("h8","#");
-            }
-            else {
-                chessBoard.put("g1", "WK");
-                chessBoard.put("e1", "#");
-                chessBoard.put("f1", "WR");
-                chessBoard.put("h1", "#");
+        if (color == 'B') {
+            chessBoard.put("g8", "BK");
+            chessBoard.put("e8", "#");
+            chessBoard.put("f8", "BR");
+            chessBoard.put("h8", "#");
+        } else {
+            chessBoard.put("g1", "WK");
+            chessBoard.put("e1", "#");
+            chessBoard.put("f1", "WR");
+            chessBoard.put("h1", "#");
+
+        }
+    }
+
+    private void doPawnMove(String move, char color) {
+
+
+
+        finalPosition = move.substring(move.length() - 2);
+       
+        pieceType = 'P';
+        ArrayList<String> initialPositions;
+        if (isCapture(move)) {
+            Piece pawnCapture = new PawnCapture();
+            initialPositions = pawnCapture.getPossibleInitialPositions(finalPosition);
+        } else {
+            Piece pawn = new Pawn();
+            initialPositions = pawn.getPossibleInitialPositions(finalPosition);
+        }
+
+        for (String position : initialPositions) {
+            String mapValue = chessBoard.get(position);
+            if (mapValue.charAt(0) == color && mapValue.charAt(1) == pieceType) {
+
+                if (color == 'W' && (position.charAt(1) < finalPosition.charAt(1))) {
+                    if (isConflictingMove(move)) {
+                        if (position.contains(String.valueOf(conflictingCharacter))) {
+                            modifyChessboard(position, color);
+                            break;
+                        }
+                    } else {
+                        modifyChessboard(position, color);
+                        break;
+                    }
+
+                } else if (position.charAt(1) > finalPosition.charAt(1) && color == 'B') {
+                    if (isConflictingMove(move)) {
+
+                        if (position.contains(String.valueOf(conflictingCharacter))) {
+                            modifyChessboard(position, color);
+                            break;
+
+                        }
+                    } else {
+                        modifyChessboard(position, color);
+                        break;
+                    }
+
+
+                }
 
             }
+        }
+    }
+
+
+    private boolean isEnPassant(String move) {
+ return move.contains("p");
+
+    }
+
+    private void doEnPassant(String move, char color) {
+
+       String EPmove = move.substring(0,move.length()-4);
+
+        doPawnMove(EPmove, color);
+        String removePosition;
+        if (color == 'W') {
+            removePosition = finalPosition.charAt(0) + "" + (char) (finalPosition.charAt(1) - 1);
+        } else {
+            removePosition = finalPosition.charAt(0) + "" + (char) (finalPosition.charAt(1) + 1);
+        }
+
+        chessBoard.put(removePosition, "#");
     }
 
     private void executeOneMove(String move, char color) {
-        if(isCastleMove(move)){
+
+        if (isCastleMove(move)) {
             doCastle(color);
         }
+        else if (isEnPassant(move)) {
 
-        if (isPawnMove(move)) {
-            finalPosition = move.substring(move.length() - 2);
-            pieceType = 'P';
-            ArrayList<String> initialPositions;
-            if (isCapture(move)) {
-                Piece pawnCapture = new PawnCapture();
-                initialPositions = pawnCapture.getPossibleInitialPositions(finalPosition);
-            } else {
-                Piece pawn = new Pawn();
-                initialPositions = pawn.getPossibleInitialPositions(finalPosition);
-            }
+            doEnPassant(move,color);
+        }
 
-            for (String position : initialPositions) {
-                String mapValue = chessBoard.get(position);
-                if (mapValue.charAt(0) == color && mapValue.charAt(1) == pieceType) {
-                    // System.out.print(color + " " + pieceType + finalPosition + " " +position);
-                    if (color == 'W' && (position.charAt(1) < finalPosition.charAt(1))) {
-                        if (isConflictingMove(move)) {
-                            if (position.contains(String.valueOf(conflictingCharacter))) {
-                                modifyChessboard(position, color);
-                                break;
-                            }
-                        } else {
-                            modifyChessboard(position, color);
-                            break;
-                        }
-
-                    } else if (position.charAt(1) > finalPosition.charAt(1) && color == 'B') {
-                        if (isConflictingMove(move)) {
-                            //dummy
-                            //System.out.println(position);
-                           //System.out.println(position.contains(String.valueOf(conflictingCharacter)));
-                            if (position.contains(String.valueOf(conflictingCharacter))) {
-                                System.out.println(conflictingCharacter);
-                                modifyChessboard(position, color);
-                                break;
-
-                            }
-                        } else {
-                            modifyChessboard(position, color);
-                            break;
-                        }
-
-
-                    }
-
-                }
-            }
-
-
+        else if (isPawnMove(move)) {
+            doPawnMove(move, color);
         } else {
             ArrayList<String> initialPositions = getInitialPositions(move);
             for (String position : initialPositions) {
@@ -204,10 +232,9 @@ public class ChessBoard {
 
 
     private boolean isPawnMove(String move) {
-        if (move.matches(".*[BRKQN].*")){
+        if (move.matches(".*[BRKQN].*")) {
             return false;
-        }
-        else{
+        } else {
             return true;
         }
 
@@ -218,7 +245,7 @@ public class ChessBoard {
         return move.contains("x");
     }
 
-    private Boolean isCastleMove(String move){
+    private Boolean isCastleMove(String move) {
         return move.equals("O_O");
     }
 
